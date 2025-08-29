@@ -39,21 +39,21 @@ def get_grade(points: List[int], max_id: int, names: List[str]) -> Dict[int, Tup
     grade = {}
     for id in range(1, max_id + 1):
         if points[id] >= 50:
-            grade[id] = (1, "GOLD")
+            grade[id] = "GOLD"
         elif points[id] >= 30:
-            grade[id] = (2, "SILVER")
+            grade[id] = "SILVER"
         else:
-            grade[id] = (0, "NORMAL")
-        print(f"NAME : {names[id]}, POINT : {points[id]}, GRADE : {grade[id][1]}")
+            grade[id] = "NORMAL"
+        print(f"NAME : {names[id]}, POINT : {points[id]}, GRADE : {grade[id]}")
     return grade
 
 
-def show_removed_player(grade: Dict[int, Tuple[int, str]], max_id: int, names: List[str], wed: List[int],
+def show_removed_player(grade: Dict[int, str], max_id: int, names: List[str], wed: List[int],
                         weekend: List[int]) -> None:
     print("\nRemoved player")
     print("==============")
     for id in range(1, max_id + 1):
-        if grade[id][0] == 0 and wed[id] == 0 and weekend[id] == 0:
+        if grade[id] == "NORMAL" and wed[id] == 0 and weekend[id] == 0:
             print(names[id])
 
 

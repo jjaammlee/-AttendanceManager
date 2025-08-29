@@ -1,14 +1,33 @@
+from abc import abstractmethod, ABC
 from typing import Dict, List, Tuple
+
+
+class GradePolicy(ABC):
+    @abstractmethod
+    def classify(self, points):
+        pass
+
+
+class TresholdGradePolicy(GradePolicy):
+    def __init__(self, threshold):
+        self.threshold_policy = threshold
+
+    def classify(self, points: int) -> str:
+        for threshold, grade in self.threshold_policy:
+            if points >= threshold:
+                return grade
+        return "NORMAL"
 
 
 class ATTENDANCE:
     def __init__(self):
         self.names = [''] * 100
         self.points = [0] * 100
-        self.grade = [0] * 100
+        self.grade = [""] * 100
         self.id_dict = {}
         self.wed_cnt = [0] * 100
         self.weekend_cnt = [0] * 100
+        self.grade_policy = TresholdGradePolicy([(50, "GOLD"), (30, "SILVER")])
 
     def get_id(self, name: str) -> None:
         max_id = len(self.id_dict)
@@ -39,19 +58,14 @@ class ATTENDANCE:
 
     def get_grade(self) -> None:
         for id in range(1, len(self.id_dict) + 1):
-            if self.points[id] >= 50:
-                self.grade[id] = (1, "GOLD")
-            elif self.points[id] >= 30:
-                self.grade[id] = (2, "SILVER")
-            else:
-                self.grade[id] = (0, "NORMAL")
-            print(f"NAME : {self.names[id]}, POINT : {self.points[id]}, GRADE : {self.grade[id][1]}")
+            self.grade[id] = self.grade_policy.classify(self.points[id])
+            print(f"NAME : {self.names[id]}, POINT : {self.points[id]}, GRADE : {self.grade[id]}")
 
     def show_removed_player(self) -> None:
         print("\nRemoved player")
         print("==============")
         for id in range(1, len(self.id_dict) + 1):
-            if self.grade[id][0] == 0 and self.wed_cnt[id] == 0 and self.weekend_cnt[id] == 0:
+            if self.grade[id] == "NORMAL" and self.wed_cnt[id] == 0 and self.weekend_cnt[id] == 0:
                 print(self.names[id])
 
     def run_attendance_system(self) -> None:

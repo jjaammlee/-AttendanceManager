@@ -60,9 +60,9 @@ def test_get_grade(capsys):
     att.get_grade()
     captured = capsys.readouterr()
 
-    assert att.grade[id1] == (1, "GOLD")
-    assert att.grade[id2] == (2, "SILVER")
-    assert att.grade[id3] == (0, "NORMAL")
+    assert att.grade[id1] == "GOLD"
+    assert att.grade[id2] == "SILVER"
+    assert att.grade[id3] == "NORMAL"
     assert "NAME : Jaewon, POINT : 55, GRADE : GOLD" in captured.out
     assert "NAME : Minji, POINT : 35, GRADE : SILVER" in captured.out
     assert "NAME : Jinwoo, POINT : 10, GRADE : NORMAL" in captured.out
@@ -74,12 +74,12 @@ def test_show_removed_player(capsys):
     id2 = att.get_id("Minji")
 
     att.points[id1] = 10
-    att.grade[id1] = (0, "NORMAL")
+    att.grade[id1] = "NORMAL"
     att.wed_cnt[id1] = 0
     att.weekend_cnt[id1] = 0
 
     att.points[id2] = 51
-    att.grade[id2] = (1, "GOLD")
+    att.grade[id2] = "GOLD"
     att.wed_cnt[id2] = 4
     att.weekend_cnt[id2] = 2
 
