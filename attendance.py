@@ -1,5 +1,5 @@
 id1 = {}
-id_cnt = 0
+max_id = 0
 
 # dat[사용자ID][요일]
 dat = [[0] * 100 for _ in range(100)]
@@ -10,7 +10,7 @@ wed = [0] * 100
 weeken = [0] * 100
 
 def input2(w, wk):
-    global id_cnt
+    global max_id
 
     if w not in id1:
         id_cnt += 1
@@ -61,7 +61,7 @@ def input_file():
                 if len(parts) == 2:
                     input2(parts[0], parts[1])
 
-        for i in range(1, id_cnt + 1):
+        for i in range(1, max_id + 1):
             if dat[i][2] > 9:
                 points[i] += 10
             if dat[i][5] + dat[i][6] > 9:
@@ -84,7 +84,7 @@ def input_file():
 
         print("\nRemoved player")
         print("==============")
-        for i in range(1, id_cnt + 1):
+        for i in range(1, max_id + 1):
             if grade[i] not in (1, 2) and wed[i] == 0 and weeken[i] == 0:
                 print(names[i])
 
