@@ -1,10 +1,8 @@
 from platform import mac_ver
-
-wed = [0] * 100
-weekend = [0] * 100
+from typing import Dict, List, Tuple
 
 
-def get_id(name, id_dict, names):
+def get_id(name: str, id_dict: Dict[str, int], names: List[str]) -> Tuple[Dict[str, int], List[str]]:
     max_id = len(id_dict)
     if name not in id_dict:
         max_id += 1
@@ -13,7 +11,8 @@ def get_id(name, id_dict, names):
     return id_dict, names
 
 
-def get_attendance_points(id, day, points):
+def get_attendance_points(id: int, day: str, points: List[int], wed: List[int], weekend: List[int]) -> Tuple[
+    List[int], List[int], List[int]]:
     add_point = 0
     if day in ["monday", "tuesday", "thursday", "friday"]:
         add_point += 1
@@ -24,10 +23,10 @@ def get_attendance_points(id, day, points):
         add_point += 2
         weekend[id] += 1
     points[id] += add_point
-    return points
+    return points, wed, weekend
 
 
-def get_bonus_points(points, max_id):
+def get_bonus_points(points: List[int], max_id: int, wed: List[int], weekend: List[int]) -> List[int]:
     for id in range(1, max_id + 1):
         if wed[id] > 9:
             points[id] += 10
@@ -36,7 +35,7 @@ def get_bonus_points(points, max_id):
     return points
 
 
-def get_grade(points, max_id, names):
+def get_grade(points: List[int], max_id: int, names: List[str]) -> Dict[int, Tuple[int, str]]:
     grade = {}
     for id in range(1, max_id + 1):
         if points[id] >= 50:
@@ -49,7 +48,8 @@ def get_grade(points, max_id, names):
     return grade
 
 
-def show_removed_player(grade, max_id, names):
+def show_removed_player(grade: Dict[int, Tuple[int, str]], max_id: int, names: List[str], wed: List[int],
+                        weekend: List[int]) -> None:
     print("\nRemoved player")
     print("==============")
     for id in range(1, max_id + 1):
@@ -57,11 +57,13 @@ def show_removed_player(grade, max_id, names):
             print(names[id])
 
 
-def input_file():
+def run_attendance_system() -> None:
     try:
         points = [0] * 100
         names = [''] * 100  # id -> name
-        id_dict = {}        # name -> id
+        id_dict = {}  # name -> id
+        wed = [0] * 100
+        weekend = [0] * 100
         with open("attendance_weekday_500.txt", encoding='utf-8') as f:
             for _ in range(500):
                 line = f.readline()
@@ -69,15 +71,15 @@ def input_file():
                     break
                 parts = line.strip().split()
                 if len(parts) == 2:
-                    id_dict, names =  get_id(parts[0], id_dict, names)
-                    points = get_attendance_points(id_dict[parts[0]], parts[1], points)
-        points = get_bonus_points(points, len(id_dict))
+                    id_dict, names = get_id(parts[0], id_dict, names)
+                    points, wed, weekend = get_attendance_points(id_dict[parts[0]], parts[1], points, wed, weekend)
+        points = get_bonus_points(points, len(id_dict), wed, weekend)
         grade = get_grade(points, len(id_dict), names)
-        show_removed_player(grade, len(id_dict), names)
+        show_removed_player(grade, len(id_dict), names, wed, weekend)
 
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
 
 
 if __name__ == "__main__":
-    input_file()
+    run_attendance_system()
