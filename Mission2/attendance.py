@@ -7,8 +7,8 @@ class ATTENDANCE:
         self.points = [0] * 100
         self.grade = [0] * 100
         self.id_dict = {}
-        self.wed = [0] * 100
-        self.weekend = [0] * 100
+        self.wed_cnt = [0] * 100
+        self.weekend_cnt = [0] * 100
 
     def get_id(self, name: str) -> None:
         max_id = len(self.id_dict)
@@ -16,6 +16,7 @@ class ATTENDANCE:
             max_id += 1
             self.id_dict[name] = max_id
             self.names[max_id] = name
+        return max_id
 
     def get_attendance_points(self, id: int, day: str) -> None:
         add_point = 0
@@ -23,17 +24,17 @@ class ATTENDANCE:
             add_point += 1
         elif day == "wednesday":
             add_point += 3
-            self.wed[id] += 1
+            self.wed_cnt[id] += 1
         elif day in ["saturday", "sunday"]:
             add_point += 2
-            self.weekend[id] += 1
+            self.weekend_cnt[id] += 1
         self.points[id] += add_point
 
     def get_bonus_points(self) -> None:
         for id in range(1, len(self.id_dict) + 1):
-            if self.wed[id] > 9:
+            if self.wed_cnt[id] > 9:
                 self.points[id] += 10
-            if self.weekend[id] > 9:
+            if self.weekend_cnt[id] > 9:
                 self.points[id] += 10
 
     def get_grade(self) -> None:
@@ -50,7 +51,7 @@ class ATTENDANCE:
         print("\nRemoved player")
         print("==============")
         for id in range(1, len(self.id_dict) + 1):
-            if self.grade[id][0] == 0 and self.wed[id] == 0 and self.weekend[id] == 0:
+            if self.grade[id][0] == 0 and self.wed_cnt[id] == 0 and self.weekend_cnt[id] == 0:
                 print(self.names[id])
 
     def run_attendance_system(self) -> None:

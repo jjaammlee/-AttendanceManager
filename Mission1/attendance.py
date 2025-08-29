@@ -62,8 +62,8 @@ def run_attendance_system() -> None:
         points = [0] * 100
         names = [''] * 100  # id -> name
         id_dict = {}  # name -> id
-        wed = [0] * 100
-        weekend = [0] * 100
+        wed_cnt = [0] * 100
+        weekend_cnt = [0] * 100
         with open("attendance_weekday_500.txt", encoding='utf-8') as f:
             for _ in range(500):
                 line = f.readline()
@@ -72,10 +72,10 @@ def run_attendance_system() -> None:
                 parts = line.strip().split()
                 if len(parts) == 2:
                     id_dict, names = get_id(parts[0], id_dict, names)
-                    points, wed, weekend = get_attendance_points(id_dict[parts[0]], parts[1], points, wed, weekend)
-        points = get_bonus_points(points, len(id_dict), wed, weekend)
+                    points, wed_cnt, weekend_cnt = get_attendance_points(id_dict[parts[0]], parts[1], points, wed_cnt, weekend_cnt)
+        points = get_bonus_points(points, len(id_dict), wed_cnt, weekend_cnt)
         grade = get_grade(points, len(id_dict), names)
-        show_removed_player(grade, len(id_dict), names, wed, weekend)
+        show_removed_player(grade, len(id_dict), names, wed_cnt, weekend_cnt)
 
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
